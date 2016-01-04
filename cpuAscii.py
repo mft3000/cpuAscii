@@ -1,9 +1,13 @@
-# 0.2
+# 0.3
 #
 # 0.1: init app
 # 0.2: add snimpy, logging and argparser
+# 0.3: tune graph, add hostname
 #
 #
+#
+# sh processes cpu sorted | i ^CPU
+# sh process memory sorted | i Processor Pool
 #
 # ftp://ftp.cisco.com/pub/mibs/v2/CISCO-PROCESS-MIB.my
 # ftp://ftp.cisco.com/pub/mibs/v2/CISCO-MEMORY-POOL-MIB.my
@@ -52,6 +56,8 @@ def main():
 
 		m = M(args.deviceName, args.deviceComm, 2)
 		print m.sysDescr
+		print 
+		print m.sysName
 		# print str(m.sysObjectID)
 
 		m = M(args.deviceName, args.deviceComm, 2)
@@ -75,7 +81,7 @@ def main():
 		col_cpuData = vcolor(cpuData, pattern)
 
 		graph = Pyasciigraph()
-		for line in  graph.graph(label='CPU Graph', data=col_cpuData):
+		for line in  graph.graph(label='CPU Graph (sh processes cpu sorted | i ^CPU)', data=col_cpuData):
 		    print line
 
 		if args.deviceMem:
@@ -85,16 +91,22 @@ def main():
 
 			memUsed = m.ciscoMemoryPoolUsed[1]
 
+			memValid = m.ciscoMemoryPoolLargestFree[1]
+
 			memData = [ \
+				('ciscoMemoryTotal', int(memFree) + int(memUsed)), \
 				('ciscoMemoryPoolFree', memFree), \
 				('ciscoMemoryPoolUsed', memUsed), \
+				('ciscoMemoryPoolLargestFree', memValid), \
 				]
 
 			pattern = [Gre, Yel, Red]
 			col_memData = vcolor(memData, pattern)
 
-			graph = Pyasciigraph()
-			for line in  graph.graph(label='MEM Graph', data=col_memData):
+			graph = Pyasciigraph(
+			human_readable='si',
+			graphsymbol='+')
+			for line in  graph.graph(label='MEM Graph (sh process memory sorted | i Processor Pool)', data=col_memData):
 			    print line
 
 		time.sleep(5)
