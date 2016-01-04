@@ -1,6 +1,7 @@
-# 0.1
+# 0.2
 #
 # 0.1: init lib
+# 0.2: 
 #
 # sh processes cpu sorted | i ^CPU
 # sh process memory sorted | i Processor Pool
@@ -61,15 +62,15 @@ class Device(object):
 		self._mem_Used = list()
 		self._mem_Alloc = list()
 
-		logging.info("loading hostname infos [1/x]...")
+		logging.debug("loading hostname infos [1/x]...")
 
 		self.sysName = str(m.sysName)
 
-		logging.info("loading sysDescr infos [2/x]...")
+		logging.debug("loading sysDescr infos [2/x]...")
 
 		self.sysDescr = str(m.sysDescr)
 
-		# logging.info("loading sysObjectID infos [3/x]...")
+		# logging.debug("loading sysObjectID infos [3/x]...")
 
 		# self.sysObjectID = str(m.sysObjectID)
 
@@ -83,14 +84,14 @@ class Device(object):
 	@property
 	def get_descr(self):
 		"""
-		Return hostname
+		Return sysDescr
 		"""
 		return self.sysDescr
 
 	@property
 	def get_objID(self):
 		"""
-		Return hostname
+		Return sysObjectID
 		"""
 		return self.sysObjectID
 
@@ -100,7 +101,7 @@ class Device(object):
 		"""
 		m = M(host=self.snmpTarget,community=self.snmpCommunity,none=True)
 
-		logging.info("loading cpu infos [4/x]...")
+		logging.debug("loading cpu infos [4/x]...")
 
 		for i in m.cpmCPUTotal5sec:
 			self._cpu_5_sec.append(int(m.cpmCPUTotal5sec[i]))
@@ -111,11 +112,11 @@ class Device(object):
 
 	def set_memStat(self):
 		"""
-		Return cpu infos
+		Return mem infos
 		"""
 		m = M(host=self.snmpTarget,community=self.snmpCommunity,none=True)
 		
-		logging.info("loading memory infos [5/x]...")
+		logging.debug("loading memory infos [5/x]...")
 
 		self._mem_Free.append(int(m.ciscoMemoryPoolFree[1]))
 
