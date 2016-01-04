@@ -9,7 +9,7 @@ install_reqs = parse_requirements('requirements.txt', session=uuid.uuid1())
 # e.g. ['django==1.5.1', 'mezzanine==1.4.6']
 reqs = [str(ir.req) for ir in install_reqs]
 
-version = '0.8'
+version = '0.81'
 
 setup(
     name='cpuAscii',
@@ -20,8 +20,8 @@ setup(
     include_package_data=True,
     description = 'Python app to see realtime cpu and memory infos from snmp',
     author = 'Francesco Marangione',
-    author_email = 'fmarangi@cisco.com',
-    url = 'https://github.com/mft3000/snmpEngine', # use the URL to the github repo
+    author_email = 'mft@mftnet.com',
+    url = 'https://github.com/mft3000/cpuAscii', # use the URL to the github repo
     download_url = 'https://github.com/mft3000/cpuAscii/tarball/%s' % version,
     keywords = ['snmp', 'Cisco', 'networking'],
     classifiers = [],
