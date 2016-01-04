@@ -1,7 +1,8 @@
-# 0.2
+# 0.3
 #
 # 0.1: init lib
 # 0.2: minor fix
+# 0.3: changes in order to control debug by cpuAscii -d
 #
 # sh processes cpu sorted | i ^CPU
 # sh process memory sorted | i Processor Pool
@@ -33,12 +34,6 @@ load("SNMPv2-MIB")
 load("SNMPv2-SMI")
 load("CISCO-PROCESS-MIB")
 load("CISCO-MEMORY-POOL-MIB")
-
-# ++++++++++++++++++++
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-# --------------------	
 
 class Device(object):
 

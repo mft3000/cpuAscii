@@ -1,4 +1,4 @@
-# 0.7
+# 0.8
 #
 # 0.1: init app
 # 0.2: add snimpy, logging and argparser
@@ -7,6 +7,7 @@
 # 0.5: revert in objects
 # 0.6: add logging
 # 0.7: add history in 5 seconds graph
+# 0.8: add debug with -d
 #
 
 # buitins
@@ -20,24 +21,28 @@ from ascii_graph.colordata import hcolor
 
 from snmpEngine import Device
 
-# ++++++++++++++++++++
-import logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-# --------------------	
-
 def main():
 
 	os.system('clear')
 
 	parser = argparse.ArgumentParser(description='cpu and memory realtime graph')
 
-	parser.add_argument('-d','--deviceName', required=True, help="eg. mi-caiomario-ar501", dest="deviceName", default="mi-caiomario-ar501")
+	parser.add_argument('-r','--routerName', required=True, help="eg. mi-caiomario-ar501", dest="deviceName", default="mi-caiomario-ar501")
 	parser.add_argument('-c','--community', required=False, help="eg. fwrocmn", dest="deviceComm", default="public")
 
 	parser.add_argument('-m','--memory', required=False, help="eg. fwrocmn", action='store_true', dest="deviceMem", default=None)
+
+	parser.add_argument('-d','--debug', required=False, action='store_true', dest="debug")
 	
 	args = parser.parse_args()
+
+	# ++++++++++++++++++++
+	if args.debug:
+		logging.basicConfig(level=logging.DEBUG)
+	else:
+		logging.basicConfig(level=logging.INFO)
+	logger = logging.getLogger(__name__)
+	# --------------------	
 
 	r1 = Device(args.deviceName, args.deviceComm)
 
