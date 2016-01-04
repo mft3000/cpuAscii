@@ -45,13 +45,13 @@ def main():
 
 	for index in range(10):
 
-		### system infos	
+		### system infos
 
 		print r1.get_hostname
 		print 
 		print r1.get_descr
 		# print r1.get_objID
-		print 
+		print
 
 		### 5 sec cpu with history
 

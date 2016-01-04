@@ -1,7 +1,7 @@
 # 0.2
 #
 # 0.1: init lib
-# 0.2: 
+# 0.2: minor fix
 #
 # sh processes cpu sorted | i ^CPU
 # sh process memory sorted | i Processor Pool
