@@ -1,11 +1,11 @@
-# 0.5
+# 0.6
 #
 # 0.1: init app
 # 0.2: add snimpy, logging and argparser
 # 0.3: tune graph, add hostname
 # 0.4: minor changes
 # 0.5: revert in objects
-#
+# 0.6: add logging
 #
 
 # buitins
@@ -18,6 +18,12 @@ from ascii_graph.colordata import vcolor
 from ascii_graph.colordata import hcolor
 
 from snmpEngine import Device
+
+# ++++++++++++++++++++
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+# --------------------	
 
 def main():
 
@@ -45,9 +51,9 @@ def main():
 		# print r1.get_objID
 
 		r1.set_cpuStat()
-		print r1._cpu_5_sec
-		print r1._cpu_1_min
-		print r1._cpu_5_min
+		logging.info(r1._cpu_5_sec)
+		logging.info(r1._cpu_1_min)
+		logging.info(r1._cpu_5_min)
 
 		cpuData = [ \
 			('cpmCPUTotal5sec', r1._cpu_5_sec[-1]), \
@@ -65,9 +71,9 @@ def main():
 		if args.deviceMem:
 
 			r1.set_memStat()
-			print r1._mem_Free
-			print r1._mem_Used
-			print r1._mem_Alloc
+			logging.info(r1._mem_Free)
+			logging.info(r1._mem_Used)
+			logging.info(r1._mem_Alloc)
 
 		# 	memFree = m.ciscoMemoryPoolFree[1]
 
