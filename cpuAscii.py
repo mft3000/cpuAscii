@@ -1,4 +1,4 @@
-# 0.6
+# 0.7
 #
 # 0.1: init app
 # 0.2: add snimpy, logging and argparser
@@ -6,6 +6,7 @@
 # 0.4: minor changes
 # 0.5: revert in objects
 # 0.6: add logging
+# 0.7: add history in 5 seconds graph
 #
 
 # buitins
@@ -40,55 +41,73 @@ def main():
 
 	r1 = Device(args.deviceName, args.deviceComm)
 
-	cpu = []
-	mem = []
+	cpuData = []
 
-	for loop in range(10):
+	for index in range(10):
+
+		### system infos	
 
 		print r1.get_hostname
 		print 
 		print r1.get_descr
 		# print r1.get_objID
+		print 
+
+		### 5 sec cpu with history
 
 		r1.set_cpuStat()
-		logging.info(r1._cpu_5_sec)
-		logging.info(r1._cpu_1_min)
-		logging.info(r1._cpu_5_min)
+		logging.debug(r1._cpu_5_sec)
+
+		for inx,r1_5_sec_explode in enumerate(r1._cpu_5_sec):
+			if index == inx:
+				cpuData.append(('cpmCPUTotal5sec <==', r1_5_sec_explode))
+			else:
+				cpuData.append(('cpmCPUTotal5sec', r1_5_sec_explode))
+
+		pattern = [Gre, Gre, Gre]
+		col_cpuData = vcolor(cpuData, pattern)
+
+		graph = Pyasciigraph(
+			graphsymbol='*')
+		for line in  graph.graph(label='CPU Graph (sh processes cpu sorted | i ^CPU)', data=col_cpuData):
+		    print line
+
+		print
+		### 1 and 5 min cpu
+
+		logging.debug(r1._cpu_1_min)
+		logging.debug(r1._cpu_5_min)
 
 		cpuData = [ \
-			('cpmCPUTotal5sec', r1._cpu_5_sec[-1]), \
-			('cpmCPUTotal1min', r1._cpu_1_min[-1]), \
-			('cpmCPUTotal5min', r1._cpu_5_min[-1]), \
+			('cpmCPUTotal1min', r1._cpu_1_min[index]), \
+			('cpmCPUTotal5min', r1._cpu_5_min[index]), \
 			]
 
-		pattern = [Gre, Yel, Red]
+		pattern = [Yel, Red]
 		col_cpuData = vcolor(cpuData, pattern)
 
 		graph = Pyasciigraph()
 		for line in  graph.graph(label='CPU Graph (sh processes cpu sorted | i ^CPU)', data=col_cpuData):
 		    print line
 
+		print
+		### memory stats
+
 		if args.deviceMem:
 
 			r1.set_memStat()
-			logging.info(r1._mem_Free)
-			logging.info(r1._mem_Used)
-			logging.info(r1._mem_Alloc)
-
-		# 	memFree = m.ciscoMemoryPoolFree[1]
-
-		# 	memUsed = m.ciscoMemoryPoolUsed[1]
-
-		# 	memValid = m.ciscoMemoryPoolLargestFree[1]
+			logging.debug(r1._mem_Free)
+			logging.debug(r1._mem_Used)
+			logging.debug(r1._mem_Alloc)
 
 			memData = [ \
-				('ciscoMemoryTotal', r1._mem_Free[-1] + r1._mem_Used[-1]), \
-				('ciscoMemoryPoolFree', r1._mem_Free[-1]), \
-				('ciscoMemoryPoolUsed', r1._mem_Used[-1]), \
-				('ciscoMemoryPoolLargestFree', r1._mem_Alloc[-1]), \
+				('ciscoMemoryTotal', r1._mem_Free[index] + r1._mem_Used[index]), \
+				('ciscoMemoryPoolFree', r1._mem_Free[index]), \
+				('ciscoMemoryPoolUsed', r1._mem_Used[index]), \
+				('ciscoMemoryPoolLargestFree', r1._mem_Alloc[index]), \
 				]
 
-			pattern = [Gre, Yel, Red]
+			pattern = [Gre, Yel, Red, Blu]
 			col_memData = vcolor(memData, pattern)
 
 			graph = Pyasciigraph(
@@ -97,6 +116,7 @@ def main():
 			for line in  graph.graph(label='MEM Graph (sh process memory sorted | i Processor Pool)', data=col_memData):
 			    print line
 
+		cpuData = []
 		time.sleep(5)
 		os.system('clear')
 
