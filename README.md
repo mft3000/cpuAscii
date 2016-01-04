@@ -44,11 +44,10 @@ cpu and memory realtime graph
 optional arguments:
   -h, --help            show this help message and exit
   -r DEVICENAME, --routerName DEVICENAME
-                        eg. mi-caiomario-ar501
   -c DEVICECOMM, --community DEVICECOMM
-                        eg. fwrocmn
-  -m, --memory          eg. fwrocmn
+  -m, --memory
   -d, --debug
+  
 
 xxxxx.xxxx.xxx
 
