@@ -1,4 +1,4 @@
-# 0.8
+# 0.81
 #
 # 0.1: init app
 # 0.2: add snimpy, logging and argparser
@@ -8,6 +8,7 @@
 # 0.6: add logging
 # 0.7: add history in 5 seconds graph
 # 0.8: add debug with -d
+# 0.81: minor changes
 #
 
 # buitins
@@ -27,10 +28,10 @@ def main():
 
 	parser = argparse.ArgumentParser(description='cpu and memory realtime graph')
 
-	parser.add_argument('-r','--routerName', required=True, help="eg. mi-caiomario-ar501", dest="deviceName", default="mi-caiomario-ar501")
-	parser.add_argument('-c','--community', required=False, help="eg. fwrocmn", dest="deviceComm", default="public")
+	parser.add_argument('-r','--routerName', required=True, dest="deviceName", default="localhost")
+	parser.add_argument('-c','--community', required=False, dest="deviceComm", default="public")
 
-	parser.add_argument('-m','--memory', required=False, help="eg. fwrocmn", action='store_true', dest="deviceMem", default=None)
+	parser.add_argument('-m','--memory', required=False, action='store_true', dest="deviceMem", default=None)
 
 	parser.add_argument('-d','--debug', required=False, action='store_true', dest="debug")
 	
