@@ -1,25 +1,12 @@
-# 0.4
+# 0.5
 #
 # 0.1: init app
 # 0.2: add snimpy, logging and argparser
 # 0.3: tune graph, add hostname
 # 0.4: minor changes
+# 0.5: revert in objects
 #
 #
-# sh processes cpu sorted | i ^CPU
-# sh process memory sorted | i Processor Pool
-#
-# ftp://ftp.cisco.com/pub/mibs/v2/CISCO-PROCESS-MIB.my
-# ftp://ftp.cisco.com/pub/mibs/v2/CISCO-MEMORY-POOL-MIB.my
-# ftp://ftp.cisco.com/pub/mibs/v2/CISCO-QOS-PIB-MIB.my
-#
-# + www reference
-# http://www.oidview.com/mibs/9/CISCO-PROCESS-MIB.html
-# https://supportforums.cisco.com/document/30366/oids-management
-#
-# + place where place mibs on mac
-# cd /usr/local/share/mibs/ietf
-# cd /usr/local/Cellar/libsmi/0.4.8/share/mibs/ietf
 
 # buitins
 import logging, argparse, time, os
@@ -30,8 +17,7 @@ from ascii_graph.colors import *
 from ascii_graph.colordata import vcolor
 from ascii_graph.colordata import hcolor
 
-from snimpy.manager import Manager as M
-from snimpy.manager import load
+from snmpEngine import Device
 
 def main():
 
@@ -46,37 +32,27 @@ def main():
 	
 	args = parser.parse_args()
 
-	load("RFC1213-MIB")					# sysName, ecc..
-	load("IP-FORWARD-MIB")
-	load("IF-MIB")
-	load("SNMPv2-MIB")
-	load("SNMPv2-SMI")
-	load("CISCO-PROCESS-MIB")
-	load("CISCO-MEMORY-POOL-MIB")
+	r1 = Device(args.deviceName, args.deviceComm)
+
+	cpu = []
+	mem = []
 
 	for loop in range(10):
 
-		m = M(args.deviceName, args.deviceComm, 2)
-		print m.sysDescr
+		print r1.get_hostname
 		print 
-		print m.sysName
-		# print str(m.sysObjectID)
+		print r1.get_descr
+		# print r1.get_objID
 
-		m = M(args.deviceName, args.deviceComm, 2)
-
-		for i in m.cpmCPUTotal5sec:
-			cpu5s = m.cpmCPUTotal5sec[i]
-		for i in m.cpmCPUTotal1min:
-			cpu1m = m.cpmCPUTotal1min[i]
-		for i in m.cpmCPUTotal5min:
-			cpu5m = m.cpmCPUTotal5min[i]
-
-		print
+		r1.set_cpuStat()
+		print r1._cpu_5_sec
+		print r1._cpu_1_min
+		print r1._cpu_5_min
 
 		cpuData = [ \
-			('cpmCPUTotal5sec', cpu5s), \
-			('cpmCPUTotal1min', cpu1m), \
-			('cpmCPUTotal5min', cpu5m), \
+			('cpmCPUTotal5sec', r1._cpu_5_sec[-1]), \
+			('cpmCPUTotal1min', r1._cpu_1_min[-1]), \
+			('cpmCPUTotal5min', r1._cpu_5_min[-1]), \
 			]
 
 		pattern = [Gre, Yel, Red]
@@ -88,18 +64,22 @@ def main():
 
 		if args.deviceMem:
 
+			r1.set_memStat()
+			print r1._mem_Free
+			print r1._mem_Used
+			print r1._mem_Alloc
 
-			memFree = m.ciscoMemoryPoolFree[1]
+		# 	memFree = m.ciscoMemoryPoolFree[1]
 
-			memUsed = m.ciscoMemoryPoolUsed[1]
+		# 	memUsed = m.ciscoMemoryPoolUsed[1]
 
-			memValid = m.ciscoMemoryPoolLargestFree[1]
+		# 	memValid = m.ciscoMemoryPoolLargestFree[1]
 
 			memData = [ \
-				('ciscoMemoryTotal', int(memFree) + int(memUsed)), \
-				('ciscoMemoryPoolFree', memFree), \
-				('ciscoMemoryPoolUsed', memUsed), \
-				('ciscoMemoryPoolLargestFree', memValid), \
+				('ciscoMemoryTotal', r1._mem_Free[-1] + r1._mem_Used[-1]), \
+				('ciscoMemoryPoolFree', r1._mem_Free[-1]), \
+				('ciscoMemoryPoolUsed', r1._mem_Used[-1]), \
+				('ciscoMemoryPoolLargestFree', r1._mem_Alloc[-1]), \
 				]
 
 			pattern = [Gre, Yel, Red]
