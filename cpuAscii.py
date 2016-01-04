@@ -1,9 +1,9 @@
-# 0.3
+# 0.4
 #
 # 0.1: init app
 # 0.2: add snimpy, logging and argparser
 # 0.3: tune graph, add hostname
-#
+# 0.4: minor changes
 #
 #
 # sh processes cpu sorted | i ^CPU
@@ -21,12 +21,14 @@
 # cd /usr/local/share/mibs/ietf
 # cd /usr/local/Cellar/libsmi/0.4.8/share/mibs/ietf
 
+# buitins
+import logging, argparse, time, os
+
+# pip install
 from ascii_graph import Pyasciigraph
 from ascii_graph.colors import *
 from ascii_graph.colordata import vcolor
 from ascii_graph.colordata import hcolor
-
-import logging, argparse, time, os
 
 from snimpy.manager import Manager as M
 from snimpy.manager import load
